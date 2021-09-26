@@ -1,3 +1,9 @@
+tmp/
+virtual_env/
+*.3gpp
+*.m4v
+*.mp4
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,5 @@
+pytube
+wheel
+youtube_transcript_api
+moviepy
+imageio-ffmpeg
