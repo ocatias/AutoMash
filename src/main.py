@@ -2,17 +2,13 @@
     Execute directly from the AutoMash directory
 """
 
-from pytube import YouTube
-from youtube_transcript_api import YouTubeTranscriptApi
 import os
+from pytube import YouTube
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+from helpers import *
 
-def url_to_id(url):
-    """
-        Transforms the url of a youtube video to its id
-    """
-    return url.split("watch?v=")[1]
+transcription_tool = "youtube"
 
 def get_snippet_path(lexicon, text):
     lexicon_entry = lexicon[text]
@@ -28,14 +24,14 @@ def get_snippet_path(lexicon, text):
         new.write_videofile(output_path, audio_codec='aac')
     return output_path
 
-
-
 # Videos to download and use
 video_urls = []
 
+# Words that the final video should use
+words = []
+
 # Path to the directory in which the videos will be stored
 video_path = "tmp"
-
 
 if not os.path.isdir(video_path):
     os.mkdir(video_path)
@@ -55,17 +51,16 @@ for url in video_urls:
     video_paths.append(os.path.join(video_path, video.default_filename))
 
 # Collect transcripts
-lexicon = {}
-for i, url in enumerate(video_urls):
-    id = url_to_id(url)
-    transcript = YouTubeTranscriptApi.get_transcript(id)
-
-    for entry in transcript:
-        lexicon[entry["text"]] = {"video_path": video_paths[i], "start": entry["start"], "end": entry["start"] + entry["duration"]}
+if transcription_tool == "youtube":
+    import att_youtube
+    lexicon = att_youtube.get_lexicon(video_urls, video_paths)
+elif transcription_tool == "watson":
+    import att_ibm_watson
+    lexicon = att_ibm_watson.get_lexicon(video_paths)
+else:
+    raise ValueError("Wrong transcription_tool selected, please select either youtube or watson")
 
 print(lexicon.keys())
-
-words = []
 
 snippets_path = [get_snippet_path(lexicon, word) for word in words]
 clips = [VideoFileClip(snippet_path) for snippet_path in snippets_path]
