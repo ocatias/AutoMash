@@ -5,11 +5,10 @@ import os
 import moviepy
 import requests
 import json
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 watson_api_keyfile = "watson.key"
-
-# Seconds to add to at the end of a word
-time_to_add_to_sounds = 0.1
 
 def get_credentials():
     f = open(watson_api_keyfile, "r")
@@ -26,9 +25,8 @@ def get_lexicon(video_paths, tmp_path):
 
         # Create audio files
         clip = moviepy.editor.VideoFileClip(path)
-        clip_short = clip.subclip(0,7)
         path_to_audio = os.path.join(tmp_path, "sound.mp3")
-        clip_short.audio.write_audiofile(path_to_audio)
+        clip.audio.write_audiofile(path_to_audio)
 
         # Get transcript from Watson
         headers = {
@@ -38,6 +36,7 @@ def get_lexicon(video_paths, tmp_path):
         response = requests.post(url + '/v1/recognize?timestamps=true', headers=headers, data=data, auth=('apikey', apikey))
         print("Received: {0}".format(response))
         json_data = json.loads(response.text)
+        # print(json_data)
 
         # Put transcript into the lexicon
         for result in json_data["results"]:
@@ -49,8 +48,8 @@ def get_lexicon(video_paths, tmp_path):
                     end = entry[2]
 
                     # Only put new words or words Watson is more confident to be correct into the lexicon
-                    if word not in lexicon or (word in lexicon and lexicon[word][confidence] < confidence):
-                        lexicon[word] = {"video_path": path, "start": start, "end": end + time_to_add_to_sounds, "confidence": confidence}
+                    if word not in lexicon or (word in lexicon and lexicon[word]["confidence"] < confidence):
+                        lexicon[word] = {"video_path": path, "start": start, "end": end, "confidence": confidence}
 
     print(lexicon)
     return lexicon
