@@ -3,6 +3,7 @@ virtual_env/
 *.3gpp
 *.m4v
 *.mp4
+*.key
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

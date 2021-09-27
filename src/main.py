@@ -8,7 +8,7 @@ from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from helpers import *
 
-transcription_tool = "youtube"
+transcription_tool = "watson"
 
 def get_snippet_path(lexicon, text):
     lexicon_entry = lexicon[text]
@@ -56,7 +56,7 @@ if transcription_tool == "youtube":
     lexicon = att_youtube.get_lexicon(video_urls, video_paths)
 elif transcription_tool == "watson":
     import att_ibm_watson
-    lexicon = att_ibm_watson.get_lexicon(video_paths)
+    lexicon = att_ibm_watson.get_lexicon(video_paths, video_path)
 else:
     raise ValueError("Wrong transcription_tool selected, please select either youtube or watson")
 
