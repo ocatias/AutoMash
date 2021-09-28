@@ -23,10 +23,10 @@ def get_credentials():
 
 def query_watson(video_path, url, apikey, tmp_path):
     # Create audio files
-    clip = moviepy.editor.VideoFileClip(video_path)
-    clip = clip.subclip(0, 20)
+    video = moviepy.editor.VideoFileClip(video_path)
     path_to_audio = os.path.join(tmp_path, "sound.mp3")
-    clip.audio.write_audiofile(path_to_audio)
+    print(video.audio)
+    video.audio.write_audiofile(path_to_audio)
 
     # Get transcript from Watson
     headers = {
