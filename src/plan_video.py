@@ -33,11 +33,14 @@ lexicon = unpickle(os.path.join(data_path, lexicon_name))
 words = []
 mute_time_after_word = []
 while len(words_unparsed) > 0:
-    for n in range(max_n_gram_length, 0, -1):
+    for n in range(max_n_gram_length, -1, -1):
+        # Exit if we could not find a one word phrase in our lexicon
+        if n == 0:
+            raise ValueError("Could not find {0} in the lexicon".format(words_unparsed[0]))
+
         n_gram = " ".join(words_unparsed[0:n])
 
         n_gram_cleared = n_gram.replace(",", "").replace(".", "").replace(";", "")
-        print(n_gram_cleared)
         if n_gram_cleared in lexicon.keys():
             words.append(n_gram_cleared)
 
