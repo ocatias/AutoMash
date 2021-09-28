@@ -39,7 +39,6 @@ def get_snippet_path(video_path, lexicon, text, additional_time_before = 0, addi
 
         end_audio = end + additional_time_after
         end = end + additional_time_after + time_to_mute_after
-        print(end_audio, end)
         if end > video.duration:
             end = video.duration
         if end_audio > video.duration:
@@ -48,10 +47,8 @@ def get_snippet_path(video_path, lexicon, text, additional_time_before = 0, addi
         video_for_audio = video.subclip(start, end_audio)
         video = video.subclip(start, end)
 
-
         # Split the audio into unmuted and muted parts and overwrite original audio
         if end > end_audio:
-            print("Adding muted part")
             audioclip_unmuted = video_for_audio.audio
 
             empty_sound = lambda t: 0

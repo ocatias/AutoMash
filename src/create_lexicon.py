@@ -19,7 +19,7 @@ transcription_tool = "watson"
 data_path = "tmp"
 
 # Number of words in a line of the readble lexicon
-words_per_line = 20
+words_per_line = 10
 
 lexicon_name = sys.argv[1]
 video_urls = sys.argv[2:]
