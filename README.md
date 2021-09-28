@@ -8,19 +8,13 @@ This was created from the videos [] with the text "".
 Get the repository:
   * Clone the repository ```git clone https://github.com/ocatias/AutoMash```
   * Go to directory ```cd AutoMash```
-   
-Virtual environment (for Windows):
   * Create a folder for the virtual environment ```mkdir virtual_env```
   * Create virtual environment ```python3 -m venv virtual_env```
-  * Activate virtual environment ```.\virtual_env\Scripts\activate.bat```
+  * Activate virtual environment: for Windows):
+     * For Windows: ```.\virtual_env\Scripts\activate.bat```
+     * For Linux: ```source virtual_env/bin/activate```
  
-Virtual environment (for Linux):
-  * Create a folder for the virtual environment ```mkdir virtual_env```
-  * Create virtual environment ```python3 -m venv virtual_env```
-  * Activate virtual environment ```source virtual_env/bin/activate```
- 
-Finally:
-   * Install dependencies ```pip install -r requirements.txt```
+  * Install dependencies ```pip install -r requirements.txt```
 
 ## Get access to IBM Watson
 AutoMash needs a text to speech interface to work, currently it can only use IBM Watson. For this you need a free account which will allow you to transform 500 minutes of audio into text for free.
