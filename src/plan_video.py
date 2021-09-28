@@ -15,8 +15,9 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 # Path to the directory in which the videos will be stored
 data_path = "tmp"
 
-# Additonal seconds that will be added after each words
-additional_time_at_end_of_words = 0.25
+pause_after_comma = 0.1
+pause_after_dot = 0.2
+pause_after_semicolon = 0.15
 
 max_n_gram_length = 5
 
@@ -28,23 +29,36 @@ words_unparsed = [format_string(x) for x in text if x != ""]
 
 lexicon = unpickle(os.path.join(data_path, lexicon_name))
 
-# Add aditional time
-for key in lexicon.keys():
-    lexicon[key]["end"] += additional_time_at_end_of_words
-
 # Try to greedily get the biggest possible n-grams from the word list
 words = []
+mute_time_after_word = []
 while len(words_unparsed) > 0:
     for n in range(max_n_gram_length, 0, -1):
         n_gram = " ".join(words_unparsed[0:n])
-        if n_gram in lexicon.keys():
-            words.append(n_gram)
+
+        n_gram_cleared = n_gram.replace(",", "").replace(".", "").replace(";", "")
+        print(n_gram_cleared)
+        if n_gram_cleared in lexicon.keys():
+            words.append(n_gram_cleared)
+
+            # Add pause if the n_gram ends on . or ,
+            pause = 0
+            while(n_gram[-1] in [".", ",", ";"]):
+                if n_gram[-1] == ".":
+                    pause += pause_after_dot
+                elif n_gram[-1] == ",":
+                    pause += pause_after_comma
+                elif n_gram[-1] == ";":
+                    pause += pause_after_semicolon
+                n_gram = n_gram[:-1]
+
+            mute_time_after_word.append(pause)
             del words_unparsed[:n]
             break
 
 text_file_path = os.path.join(data_path, project_name + "_video_plan.txt")
 with open(text_file_path, "w") as text_file:
-    for word in words:
-        text_file.write(word +"\t0\t0\n")
+    for word, pause in zip(words, mute_time_after_word):
+        text_file.write(word +"\t0\t0\t{0}\n".format(pause))
 
 print("Created the video plan, you can read and change it: {0}".format(text_file_path))

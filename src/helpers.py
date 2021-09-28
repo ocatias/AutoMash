@@ -67,10 +67,10 @@ def format_string(input):
         Format a string so that it can be represented in a uniform way
     """
     # Transform to lower case
-    input = input.lower()
+    input = input.lower().strip()
 
     # Only allow characters and the apostrophe
-    regex = re.compile('[^a-zA-Z\' ]')
+    regex = re.compile('[^a-zA-Z\' ,.;]')
     input = regex.sub('', input)
 
     return input

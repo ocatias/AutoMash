@@ -17,7 +17,7 @@ data_path = "tmp"
 pause_between_phrases = 0.2
 
 def read_video_plan(path):
-    words, time_before, time_after = [], [], []
+    words, time_before, time_after, pause_after = [], [], [], []
     with open(path) as f:
         lines = f.readlines()
 
@@ -27,17 +27,19 @@ def read_video_plan(path):
         words.append(entries[0])
         time_before.append(float(entries[1]))
         time_after.append(float(entries[2]))
-    return words, time_before, time_after
+        pause_after.append(float(entries[3]))
+
+    return words, time_before, time_after, pause_after
 
 
 project_name = sys.argv[1]
 lexicon = unpickle(os.path.join(data_path, project_name + ".lexicon"))
 
 # Parse video plan
-words, time_before, time_after = read_video_plan(os.path.join(data_path, project_name + "_video_plan.txt"))
-data = zip(words, time_before, time_after)
+words, time_before, time_after, pause_after = read_video_plan(os.path.join(data_path, project_name + "_video_plan.txt"))
+data = zip(words, time_before, time_after, pause_after)
 
-snippets_path = [get_snippet_path(data_path, lexicon, words, time_before, time_after, pause_between_phrases) for (words, time_before, time_after) in data]
+snippets_path = [get_snippet_path(data_path, lexicon, words, time_before, time_after, pause_after + pause_between_phrases) for (words, time_before, time_after, pause_after) in data]
 clips = [VideoFileClip(snippet_path) for snippet_path in snippets_path]
 final_clip = concatenate_videoclips(clips, method='compose')
 final_clip.write_videofile(sys.argv[1] + ".mp4")
