@@ -21,7 +21,7 @@ def unpickle(path):
         file.close()
     return data
 
-def get_snippet_path(video_path, lexicon, text, additional_time_before = 0, additional_time_after = 0, time_to_mute_after = 0):
+def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, additional_time_before = 0, additional_time_after = 0, time_to_mute_after = 0):
     lexicon_entry = lexicon[text]
     path = lexicon_entry["video_path"]
     start = lexicon_entry["start"]
@@ -33,12 +33,12 @@ def get_snippet_path(video_path, lexicon, text, additional_time_before = 0, addi
         video = VideoFileClip(path)
 
         # Set start and end points
-        start = start - additional_time_before
+        start = start - additional_time_before - fade_in_time
         if start < 0:
             start = 0
 
-        end_audio = end + additional_time_after
-        end = end + additional_time_after + time_to_mute_after
+        end_audio = end + additional_time_after + fade_out_time
+        end = end + additional_time_after + fade_out_time + time_to_mute_after
         if end > video.duration:
             end = video.duration
         if end_audio > video.duration:
@@ -50,6 +50,8 @@ def get_snippet_path(video_path, lexicon, text, additional_time_before = 0, addi
         # Split the audio into unmuted and muted parts and overwrite original audio
         if end > end_audio:
             audioclip_unmuted = video_for_audio.audio
+            audioclip_unmuted = audioclip_unmuted.audio_fadein(fade_in_time)
+            audioclip_unmuted = audioclip_unmuted.audio_fadeout(fade_out_time)
 
             empty_sound = lambda t: 0
             audioclip_muted = AudioClip(empty_sound, duration= end - end_audio)
