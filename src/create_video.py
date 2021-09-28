@@ -15,17 +15,30 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 data_path = "tmp"
 
 # Additonal seconds that will be added after each words
-additional_time_at_end_of_words = 0.15
+additional_time_at_end_of_words = 0.25
+
+max_n_gram_length = 5
+
 
 lexicon_name = sys.argv[1] + ".lexicon"
 text = sys.argv[2].split(" ")
-words = [x.lower() for x in text if x != ""]
+words_unparsed = [format_string(x) for x in text if x != ""]
 
 lexicon = unpickle(os.path.join(data_path, lexicon_name))
 
 # Add aditional time
 for key in lexicon.keys():
     lexicon[key]["end"] += additional_time_at_end_of_words
+
+# Try to greedily get the biggest possible n-grams from the word list
+words = []
+while len(words_unparsed) > 0:
+    for n in range(max_n_gram_length, 0, -1):
+        n_gram = " ".join(words_unparsed[0:n])
+        if n_gram in lexicon.keys():
+            words.append(n_gram)
+            del words_unparsed[:n]
+            break
 
 snippets_path = [get_snippet_path(data_path, lexicon, word) for word in words]
 clips = [VideoFileClip(snippet_path) for snippet_path in snippets_path]

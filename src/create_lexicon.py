@@ -18,6 +18,9 @@ transcription_tool = "watson"
 # Path to the directory in which the videos will be stored
 data_path = "tmp"
 
+# Number of words in a line of the readble lexicon
+words_per_line = 20
+
 lexicon_name = sys.argv[1]
 video_urls = sys.argv[2:]
 
@@ -51,6 +54,11 @@ print("Stored {0} words in the lexicon".format(len(lexicon.keys())))
 
 text_file_path = os.path.join(data_path, lexicon_name + ".txt")
 with open(text_file_path, "w") as text_file:
-    text_file.write("\n".join(lexicon.keys()))
+    words = list(lexicon.keys())
+    lines = []
+    for i in range(0, len(words), words_per_line):
+        lines.append(", ".join(words[i:i + words_per_line]))
+
+    text_file.write("\n".join(lines))
 
 print("You can find the words in a human readable format at: {0}".format(text_file_path))
