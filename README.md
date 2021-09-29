@@ -14,6 +14,7 @@ Get the repository:
      * For Windows: ```.\virtual_env\Scripts\activate.bat```
      * For Linux: ```source virtual_env/bin/activate```
  
+  * If you want to have text subtitles in your videos (they can be activated in ```src\helpers.py```) then you need to install [ImageMagick](https://imagemagick.org/index.php) before installing the other dependencies
   * Install dependencies ```pip install -r requirements.txt```
 
 ## Get access to IBM Watson
