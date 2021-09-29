@@ -39,6 +39,7 @@ def query_watson(video_path, url, apikey, tmp_path):
 
 def get_lexicon(video_paths, tmp_path):
     lexicon = {}
+    transcript = ""
     url, apikey = get_credentials()
     # Parse each video
     for video_path in video_paths:
@@ -54,7 +55,6 @@ def get_lexicon(video_paths, tmp_path):
             do_pickle(json_data, json_path)
 
         # Put n-grams into the lexicon and create a transcript
-        transcript = ""
         for result in json_data["results"]:
             for alternative in result["alternatives"]:
                 confidence = alternative["confidence"]
@@ -72,4 +72,5 @@ def get_lexicon(video_paths, tmp_path):
                         if words not in lexicon or (words in lexicon and lexicon[words]["confidence"] < confidence):
                             lexicon[words] = {"video_path": video_path, "start": start, "end": end, "confidence": confidence}
 
+        transcript += "\n"
     return lexicon, transcript
