@@ -41,25 +41,29 @@ for url in video_urls:
 
 # Collect transcripts
 if transcription_tool == "youtube":
+    raise ValueError("Youtube subtitles currently do not work")
     import att_youtube
     lexicon = att_youtube.get_lexicon(video_urls, video_paths)
 elif transcription_tool == "watson":
     import att_ibm_watson
-    lexicon = att_ibm_watson.get_lexicon(video_paths, data_path)
+    lexicon, transcript = att_ibm_watson.get_lexicon(video_paths, data_path)
 else:
     raise ValueError("Wrong transcription_tool selected, please select either youtube or watson")
 
 # Store lexicon
 do_pickle(lexicon, os.path.join(data_path, lexicon_name + ".lexicon"))
-print("Stored {0} words in the lexicon".format(len(lexicon.keys())))
+print("Stored {0} phrases in the lexicon".format(len(lexicon.keys())))
 
 text_file_path = os.path.join(data_path, lexicon_name + ".txt")
 with open(text_file_path, "w") as text_file:
-    words = list(lexicon.keys())
-    lines = []
-    for i in range(0, len(words), words_per_line):
-        lines.append(", ".join(words[i:i + words_per_line]))
-
-    text_file.write("\n".join(lines))
+    words = transcript.split(" ")
+    while len(words) > 0:
+        nr_words_in_this_line = min(words_per_line, len(words))
+        words_in_this_line = []
+        while nr_words_in_this_line > 0:
+            nr_words_in_this_line -= 1
+            words_in_this_line.append(words[0])
+            del words[0]
+        text_file.write(" ".join(words_in_this_line) + "\n")
 
 print("You can find the words in a human readable format at: {0}".format(text_file_path))
