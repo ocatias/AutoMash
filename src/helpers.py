@@ -35,12 +35,12 @@ def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, add
         video = VideoFileClip(path)
 
         # Set start and end points
-        start = start - additional_time_before - fade_in_time
+        start = start - additional_time_before
         if start < 0:
             start = 0
 
-        end_audio = end + additional_time_after + fade_out_time
-        end = end + additional_time_after + fade_out_time + time_to_mute_after
+        end_audio = end + additional_time_after
+        end = end + additional_time_after + time_to_mute_after
         if end > video.duration:
             end = video.duration
         if end_audio > video.duration:
@@ -77,7 +77,7 @@ def format_string(input):
         Format a string so that it can be represented in a uniform way
     """
     # Transform to lower case
-    input = input.lower().strip()
+    input = input.lower().strip().replace("  ", " ")
 
     # Only allow characters and the apostrophe
     regex = re.compile('[^a-zA-Z\' ,.;]')

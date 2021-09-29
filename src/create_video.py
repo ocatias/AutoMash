@@ -16,8 +16,8 @@ data_path = "tmp"
 # Additonal seconds that will be added after each words
 pause_between_phrases = 0.1
 
-fade_in_time = 0
-fade_out_time = 0
+fade_in_time = 0.03 + 0.02
+fade_out_time = 0.03 + 0.02
 
 def read_video_plan(path):
     words, time_before, time_after, pause_after = [], [], [], []
@@ -42,7 +42,7 @@ lexicon = unpickle(os.path.join(data_path, project_name + ".lexicon"))
 words, time_before, time_after, pause_after = read_video_plan(os.path.join(data_path, project_name + "_video_plan.txt"))
 data = zip(words, time_before, time_after, pause_after)
 
-snippets_path = [get_snippet_path(fade_in_time, fade_out_time, data_path, lexicon, words, time_before, time_after, pause_after + pause_between_phrases) for (words, time_before, time_after, pause_after) in data]
+snippets_path = [get_snippet_path(fade_in_time, fade_out_time, data_path, lexicon, words, time_before  + 0.02 , time_after  + 0.02, pause_after + pause_between_phrases) for (words, time_before, time_after, pause_after) in data]
 clips = [VideoFileClip(snippet_path) for snippet_path in snippets_path]
 final_clip = concatenate_videoclips(clips, method='compose')
 final_clip.write_videofile(sys.argv[1] + ".mp4")
