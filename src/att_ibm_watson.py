@@ -10,7 +10,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 from helpers import *
 
 watson_api_keyfile = "watson.key"
-max_n_gram_length = 5
+max_n_gram_length = 10
 
 def get_credentials():
     f = open(watson_api_keyfile, "r")
@@ -25,7 +25,6 @@ def query_watson(video_path, url, apikey, tmp_path):
     # Create audio files
     video = moviepy.editor.VideoFileClip(video_path)
     path_to_audio = os.path.join(tmp_path, "sound.mp3")
-    print(video.audio)
     video.audio.write_audiofile(path_to_audio)
 
     # Get transcript from Watson
@@ -62,7 +61,6 @@ def get_lexicon(video_paths, tmp_path):
                 for n_gram_length in range(1, max_n_gram_length + 1):
                     for idx in range(len(alternative["timestamps"]) + 1 - n_gram_length):
                         entries = alternative["timestamps"][idx:idx+n_gram_length]
-                        print(entries)
 
                         words = format_string(" ".join([entries[i][0] for i in range(n_gram_length)]))
                         start = entries[0][1]
