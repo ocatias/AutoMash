@@ -3,6 +3,8 @@ import os
 from moviepy.editor import *
 import re
 
+put_phrase_in_video = True
+
 def url_to_id(url):
     """
         Transforms the url of a youtube video to its id
@@ -27,7 +29,7 @@ def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, add
     start = lexicon_entry["start"]
     end = lexicon_entry["end"]
 
-    output_path = os.path.join(video_path, "{0}_{1}_{2}_{3}.mp4".format(text, additional_time_before, additional_time_after, time_to_mute_after))
+    output_path = os.path.join(video_path, "{0}_{1}_{2}_{3}_{4}_{5}.mp4".format(text, additional_time_before, additional_time_after, time_to_mute_after, fade_in_time, fade_out_time))
 
     if not os.path.exists(output_path):
         video = VideoFileClip(path)
@@ -50,13 +52,22 @@ def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, add
         # Split the audio into unmuted and muted parts and overwrite original audio
         if end > end_audio:
             audioclip_unmuted = video_for_audio.audio
-            audioclip_unmuted = audioclip_unmuted.audio_fadein(fade_in_time)
-            audioclip_unmuted = audioclip_unmuted.audio_fadeout(fade_out_time)
+            if fade_in_time > 0:
+                audioclip_unmuted = audioclip_unmuted.audio_fadein(fade_in_time)
+            if fade_out_time > 0:
+                audioclip_unmuted = audioclip_unmuted.audio_fadeout(fade_out_time)
 
             empty_sound = lambda t: 0
             audioclip_muted = AudioClip(empty_sound, duration= end - end_audio)
             audioclip = concatenate_audioclips([audioclip_unmuted, audioclip_muted])
             video.audio = audioclip
+
+        # Add the phrase as text to the video
+
+        if put_phrase_in_video:
+            txt_clip = TextClip(text, fontsize = 50, color = 'red')
+            txt_clip = txt_clip.set_pos('bottom').set_duration(end - start)
+            video = CompositeVideoClip([video, txt_clip])
 
         video.write_videofile(output_path, audio_codec='aac')
     return output_path
