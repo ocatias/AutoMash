@@ -14,10 +14,10 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 # Path to the directory in which the videos will be stored
 data_path = "tmp"
 # Additonal seconds that will be added after each words
-pause_between_phrases = 0.2
+pause_between_phrases = 0.1
 
-fade_in_time = 0.08
-fade_out_time = 0.08
+fade_in_time = 0
+fade_out_time = 0
 
 def read_video_plan(path):
     words, time_before, time_after, pause_after = [], [], [], []
