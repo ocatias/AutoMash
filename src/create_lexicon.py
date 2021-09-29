@@ -32,7 +32,7 @@ for url in video_urls:
     yt = YouTube(url)
 
     # video = yt.streams.filter(res="480p").first()
-    video = yt.streams.first()
+    video = yt.streams.filter(res="720p").first()
     video.download(data_path)
 
     title = yt.title
