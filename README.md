@@ -6,6 +6,7 @@ Automatically create YouTube mashups. For a given list of videos and a text, Aut
 `In today's video I'm gonna tell you why you will waste four years of your life when you study computer science. With a computer science degree you can easily get outsourced within your first few years. The reason you clicked on this video is because you wanted to know how to get a job. However a computer science degree will not do that for you, study math or physics instead.`
 
 [Second example](https://youtu.be/VwSHRazxzPE). This was created automatically from [this](https://www.youtube.com/watch?v=k-xPJCmTOO4) video and the following text.
+
 `In the mainstream it's always talked about Napoleon's invasion of America. However, the majority of people who have research this know that he actually managed to destroy the american colonies. There's a lot of potential here, and I've never really seen anyone doubt that.`
 
 ### How it works
