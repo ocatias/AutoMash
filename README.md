@@ -1,9 +1,12 @@
 # AutoMash
 Automatically create YouTube mashups. For a given list of videos and a text, AutoMash will cut the videos together so the speakers in the video says the given text. This is best understood by considering the following two examples.
 
-[First example](https://www.youtube.com/watch?v=r4mD1MQhz1g). This was created automatically from [this](https://www.youtube.com/watch?v=c-41IY0bOGU) video and the following text.
+[First example](https://www.youtube.com/watch?v=Hd3cNrdM_Dw). This was created automatically from [this](https://www.youtube.com/watch?v=c-41IY0bOGU) video and the following text.
 
 `In today's video I'm gonna tell you why you will waste four years of your life when you study computer science. With a computer science degree you can easily get outsourced within your first few years. The reason you clicked on this video is because you wanted to know how to get a job. However a computer science degree will not do that for you, study math or physics instead.`
+
+[Second example](https://youtu.be/VwSHRazxzPE). This was created automatically from [this](https://www.youtube.com/watch?v=k-xPJCmTOO4) video and the following text.
+`In the mainstream it's always talked about Napoleon's invasion of America. However, the majority of people who have research this know that he actually managed to destroy the american colonies. There's a lot of potential here, and I've never really seen anyone doubt that.`
 
 ### How it works
 AutoMash will download the given YouTube videos and then send their audio to IBM Watson which will return a transcript of the videos. Then AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
