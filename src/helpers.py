@@ -24,7 +24,7 @@ def unpickle(path):
     return data
 
 def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, additional_time_before = 0, additional_time_after = 0, time_to_mute_after = 0):
-    lexicon_entry = lexicon[text]
+    lexicon_entry = lexicon[strip_punctuation(format_string(text))]
     path = lexicon_entry["video_path"]
     start = lexicon_entry["start"]
     end = lexicon_entry["end"]
@@ -84,6 +84,9 @@ def format_string(input):
     input = regex.sub('', input)
 
     return input
+
+def strip_punctuation(input):
+    return input.replace(",", "").replace(".", "").replace(";", "")
 
 def list_of_dict_to_dict_of_lists(list_of_dicts):
     return {k: [dic[k] for dic in list_of_dicts] for k in list_of_dicts[0]}
