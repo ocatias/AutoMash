@@ -10,10 +10,10 @@ Automatically create YouTube mashups. For a given list of videos and a text, Aut
 `In the mainstream it's always talked about Napoleon's invasion of America. However, the majority of people who have research this know that he actually managed to destroy the american colonies. There's a lot of potential here, and I've never really seen anyone doubt that.`
 
 ### How it works
-AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently both [DeepSpeech](https://github.com/mozilla/DeepSpeech) and IBM Watson are supported. Then AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
+AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently, AutoMash is compatible to two speech-to-text tools: [DeepSpeech](https://github.com/mozilla/DeepSpeech) and IBM Watson. After transcribing the videos, AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
 
 ### DeepSpeech or IBM Watson
-You can either use DeepSpeech or IBM Watson to get video transcripts. DeepSpeech is easily to configure and free to use without limits. However, it both produces worse results and is slower (transcribing one minute of video takes about a minute of real time on my Ryzen 5 1600). The downsides to IBM Watson are that configuring it is a bit more work and can only be used to transcribe 500 minutes of video per month.
+You can either use DeepSpeech or IBM Watson to get video transcripts. DeepSpeech is easier to configure and free to use without limitations. However, it both produces worse results and is slower (transcribing one minute of video takes about a minute of real time on my Ryzen 5 1600). The downsides to IBM Watson are that configuring it is a bit more work and that it can only be used to transcribe 500 minutes of audio per month.
 
 ## How to install
 ### Install the repository
@@ -30,10 +30,10 @@ Get the repository:
   * Install dependencies ```pip install -r requirements.txt```
   * Next you either need to configure DeepSpeech or IBM Watson.
 
-### Install DeepSpeech (Recommended)
+### Configure DeepSpeech
 Download the language model into the AutoMash folder ```curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm```.
 
-### Get access to IBM Watson
+### Configure IBM Watson
 You will need a free account which will allow you to transform 500 minutes of audio into text for free.
 
 1. Register [here](https://cloud.ibm.com/registration). Sometimes account creation fails, this seems to be a faulty IBM anti fraud measure it helps to try different email addresses, private browsing / incognito mode mode or different browsers. For me it worked under Firefox with private browsing and a gmail address.
@@ -43,7 +43,7 @@ You will need a free account which will allow you to transform 500 minutes of au
 Url
 API Key
 ```
-4. in `src\create_lexicon.py` set `transcription_tool` to `watson`.
+4. In `src\create_lexicon.py` set `transcription_tool` to `"watson"`.
 
 ## How to use AutoMash
 Before you can create the mashup you will need to decide on a list of YouTube videos that you want to use for this. Next we will get a transcript for these videos by querying IBM Watson, then we will write the text for the final video and create a video plan. Afterwards we can create the video and if necessary finetune the cuts.
