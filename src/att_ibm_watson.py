@@ -45,7 +45,7 @@ def get_lexicon(video_paths, tmp_path):
     for video_path in video_paths:
 
         # If we have already queried Watson for this video, load the previos query
-        json_path = os.path.splitext(video_path)[0] + "_json.pkle"
+        json_path = os.path.splitext(video_path)[0] + "_watson_json.pkle"
         if os.path.isfile(json_path):
             json_data = unpickle(json_path)
 

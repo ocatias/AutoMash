@@ -4,6 +4,7 @@ virtual_env/
 *.m4v
 *.mp4
 *.key
+*.pbmm
 todo.txt
 
 # Byte-compiled / optimized / DLL files

@@ -3,3 +3,6 @@ wheel
 youtube_transcript_api
 moviepy
 imageio-ffmpeg
+deepspeech
+soundfile
+librosa

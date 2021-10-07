@@ -13,7 +13,7 @@ from helpers import *
 """
 
 
-transcription_tool = "watson"
+transcription_tool = "deepspeech"
 
 # Path to the directory in which the videos will be stored
 data_path = "tmp"
@@ -40,15 +40,14 @@ for url in video_urls:
     video_paths.append(os.path.join(data_path, video.default_filename))
 
 # Collect transcripts
-if transcription_tool == "youtube":
-    raise ValueError("Youtube subtitles currently do not work")
-    import att_youtube
-    lexicon = att_youtube.get_lexicon(video_urls, video_paths)
+if transcription_tool == "deepspeech":
+    import att_deepspeech
+    lexicon, transcript = att_deepspeech.get_lexicon(video_paths, data_path)
 elif transcription_tool == "watson":
     import att_ibm_watson
     lexicon, transcript = att_ibm_watson.get_lexicon(video_paths, data_path)
 else:
-    raise ValueError("Wrong transcription_tool selected, please select either youtube or watson")
+    raise ValueError("Wrong transcription_tool selected, please select either deepspeech or watson")
 
 # Store lexicon
 do_pickle(lexicon, os.path.join(data_path, lexicon_name + ".lexicon"))
