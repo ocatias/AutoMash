@@ -30,7 +30,7 @@ Get the repository:
 
   * If you want to have text subtitles in your videos (they can be activated in ```src\helpers.py```) then you need to install [ImageMagick](https://imagemagick.org/index.php) before installing the other dependencies
   * Install dependencies ```pip install -r requirements.txt```
-  * Next you either need to configure DeepSpeech or IBM Watson.
+  * Next you either need to configure one of Vosk, DeepSpeech or IBM Watson.
 
 ### Configure Vosk
 Download the language model into the AutoMash folder ```curl -LO http://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip``` and unzip it. Then open the `config.yaml` file and set `transcription_tool` to `vosk` and `model_path` to the path of the unzipped folder, for example to `vosk-model-en-us-0.22`.
