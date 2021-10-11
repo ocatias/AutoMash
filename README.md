@@ -10,7 +10,7 @@ Automatically create YouTube mashups. For a given list of videos and a text, Aut
 `In the mainstream it's always talked about Napoleon's invasion of America. However, the majority of people who have research this know that he actually managed to destroy the american colonies. There's a lot of potential here, and I've never really seen anyone doubt that.`
 
 ### How it works
-AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently, AutoMash is compatible to three speech-to-text tools: Vosk, [DeepSpeech](https://github.com/mozilla/DeepSpeech) and IBM Watson. After transcribing the videos, AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
+AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently, AutoMash is compatible to three speech-to-text tools: [Vosk](https://alphacephei.com/vosk/), [DeepSpeech](https://github.com/mozilla/DeepSpeech) and [IBM Watson](https://www.ibm.com/watson). After transcribing the videos, AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
 
 ### DeepSpeech or IBM Watson
 TL;DR: Use Vosk. If this yields bad results try IBM Watson. I do not recommend DeepSpeech.
