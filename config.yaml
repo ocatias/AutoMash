@@ -1,0 +1,22 @@
+# Which spech-to-text tool to use, either deepspeech, vosk or watson
+transcription_tool: vosk
+# If using vosk or deepspecch: the path to the model file
+model_path: models\vosk-model-en-us-0.22
+# The directory in which temporary data will be stored
+tmp_dir: tmp
+# Number of words in a line of the readble lexicon
+words_per_line: 10
+
+# The maximum length of a phrase that we search for
+max_n_gram_length: 5
+# Length of the mute period after each comma / dot / semicolon
+pause_after_comma: 0.1
+pause_after_dot: 0.2
+pause_after_semicolon: 0.15
+
+# Additonal seconds that will be added after each words
+pause_between_phrases: 0.1
+# Amount of time for the fade-in of each phrase
+fade_in_time: 0.05
+# Amount of time for the fade-out of each phrase
+fade_out_time: 0.05

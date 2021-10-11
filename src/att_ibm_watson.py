@@ -8,9 +8,9 @@ import json
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from helpers import *
+import config
 
 watson_api_keyfile = "watson.key"
-max_n_gram_length = 10
 
 def get_credentials():
     f = open(watson_api_keyfile, "r")
@@ -18,8 +18,6 @@ def get_credentials():
     url = lines[0]
     apikey = lines[1]
     return url, apikey
-
-
 
 def query_watson(video_path, url, apikey, tmp_path):
     # Create audio files
@@ -38,6 +36,8 @@ def query_watson(video_path, url, apikey, tmp_path):
     return json_data
 
 def get_lexicon(video_paths, tmp_path):
+    config_dict = config.get_config()
+
     lexicon = {}
     transcript = ""
     url, apikey = get_credentials()
@@ -60,7 +60,7 @@ def get_lexicon(video_paths, tmp_path):
                 confidence = alternative["confidence"]
                 transcript += format_string(alternative["transcript"]) + " "
 
-                for n_gram_length in range(1, max_n_gram_length + 1):
+                for n_gram_length in range(1, config_dict["max_n_gram_length"] + 1):
                     for idx in range(len(alternative["timestamps"]) + 1 - n_gram_length):
                         entries = alternative["timestamps"][idx:idx+n_gram_length]
 

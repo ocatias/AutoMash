@@ -12,12 +12,11 @@ import librosa
 import deep_speech_client
 import json
 import numpy as np
+import config
 
-watson_api_keyfile = "watson.key"
 max_n_gram_length = 10
-model_path = "deepspeech-0.9.3-models.pbmm"
 
-def use_deepspeech(video_path, tmp_path):
+def use_deepspeech(video_path, tmp_path, model_path):
     print(video_path)
 
     # Create audio files
@@ -33,10 +32,10 @@ def use_deepspeech(video_path, tmp_path):
 
     response = deep_speech_client.inference(model_path, path_to_audio2)
     json_data = json.loads(response)
-    # print("json_data", json_data)
     return json_data
 
-def get_lexicon(video_paths, tmp_path):
+def get_lexicon(video_paths, tmp_path, model_path):
+    config_dict = config.get_config()
     lexicon = {}
     transcript = ""
     # Parse each video
@@ -48,7 +47,7 @@ def get_lexicon(video_paths, tmp_path):
             json_data = unpickle(json_path)
         # Otherwise use deepspeech
         else:
-            json_data = use_deepspeech(video_path, tmp_path)
+            json_data = use_deepspeech(video_path, tmp_path, model_path)
             do_pickle(json_data, json_path)
 
         confidences = [x["confidence"] for x in json_data["transcripts"]]
@@ -59,7 +58,7 @@ def get_lexicon(video_paths, tmp_path):
         confidence = confidences[idx]
         transcript += " ".join([x["word"] for x in alternative["words"]]) + "\n "
 
-        for n_gram_length in range(1, max_n_gram_length + 1):
+        for n_gram_length in range(1, config_dict["max_n_gram_length"] + 1):
             for idx in range(len(alternative["words"]) + 1 - n_gram_length):
                 entries = alternative["words"][idx:idx+n_gram_length]
 

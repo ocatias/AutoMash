@@ -2,6 +2,7 @@ import sys
 import os
 from helpers import *
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+import config
 
 """
     After creating a video this script can be used to plan the video.
@@ -12,15 +13,13 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
     and that project_name is the same project_name as selected in create_lexicon.py
 """
 
-# Path to the directory in which the videos will be stored
-data_path = "tmp"
+config_dict = config.get_config()
 
-pause_after_comma = 0.1
-pause_after_dot = 0.2
-pause_after_semicolon = 0.15
-
-max_n_gram_length = 5
-
+data_path = config_dict["tmp_dir"]
+pause_after_comma = config_dict["pause_after_comma"]
+pause_after_dot = config_dict["pause_after_dot"]
+pause_after_semicolon = config_dict["pause_after_semicolon"]
+max_n_gram_length = config_dict["max_n_gram_length"]
 
 project_name = sys.argv[1]
 lexicon_name = project_name + ".lexicon"

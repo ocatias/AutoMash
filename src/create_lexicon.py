@@ -2,6 +2,7 @@ import sys
 from pytube import YouTube
 import os
 from helpers import *
+import config
 
 """
     Creates a lexicon of words from a list of youtube videos.
@@ -12,14 +13,12 @@ from helpers import *
         python src\create_lexicon.py MyProject https://www.youtube.com/watch?v=5te73hfCpuU https://www.youtube.com/watch?v=VMinwf-kRlA
 """
 
+config_dict = config.get_config()
 
-transcription_tool = "deepspeech"
-
-# Path to the directory in which the videos will be stored
-data_path = "tmp"
-
-# Number of words in a line of the readble lexicon
-words_per_line = 10
+transcription_tool = config_dict["transcription_tool"]
+data_path = config_dict["tmp_dir"]
+words_per_line = config_dict["words_per_line"]
+model_path = config_dict["model_path"]
 
 lexicon_name = sys.argv[1]
 video_urls = sys.argv[2:]
@@ -30,22 +29,27 @@ video_paths = []
 for url in video_urls:
 
     yt = YouTube(url)
-
-    # video = yt.streams.filter(res="480p").first()
     video = yt.streams.filter(res="720p").first()
-    video.download(data_path)
+    video_path = os.path.join(data_path, video.default_filename)
 
-    title = yt.title
-    print("\tDownloaded {0}".format(title))
-    video_paths.append(os.path.join(data_path, video.default_filename))
+    # Download video if it is not yet stored
+    if not os.path.isfile(video_path):
+        video.download(data_path)
+        title = yt.title
+        print("\tDownloaded {0}".format(title))
+
+    video_paths.append(video_path)
 
 # Collect transcripts
 if transcription_tool == "deepspeech":
     import att_deepspeech
-    lexicon, transcript = att_deepspeech.get_lexicon(video_paths, data_path)
+    lexicon, transcript = att_deepspeech.get_lexicon(video_paths, data_path, model_path)
 elif transcription_tool == "watson":
     import att_ibm_watson
     lexicon, transcript = att_ibm_watson.get_lexicon(video_paths, data_path)
+elif transcription_tool == "vosk":
+    import att_vosk
+    lexicon, transcript = att_vosk.get_lexicon(video_paths, data_path, model_path)
 else:
     raise ValueError("Wrong transcription_tool selected, please select either deepspeech or watson")
 

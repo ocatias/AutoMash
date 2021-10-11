@@ -2,6 +2,7 @@ import sys
 import os
 from helpers import *
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+import config
 
 
 """
@@ -11,13 +12,12 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
     Please ensure that the project_name the same project_name used int plan_video.py
 """
 
-# Path to the directory in which the videos will be stored
-data_path = "tmp"
-# Additonal seconds that will be added after each words
-pause_between_phrases = 0.1
+config_dict = config.get_config()
 
-fade_in_time = 0.03 + 0.02
-fade_out_time = 0.03 + 0.02
+data_path = config_dict["tmp_dir"]
+pause_between_phrases = config_dict["pause_between_phrases"]
+fade_in_time = config_dict["fade_in_time"]
+fade_out_time = config_dict["fade_out_time"]
 
 def read_video_plan(path):
     words, time_before, time_after, pause_after = [], [], [], []

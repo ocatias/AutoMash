@@ -6,6 +6,7 @@ virtual_env/
 *.key
 *.pbmm
 todo.txt
+models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
