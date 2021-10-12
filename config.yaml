@@ -7,6 +7,8 @@ tmp_dir: tmp
 # Number of words in a line of the readble lexicon
 words_per_line: 10
 
+add_subtitles: 0
+
 # The maximum length of a phrase that we search for
 max_n_gram_length: 5
 # Length of the mute period after each comma / dot / semicolon

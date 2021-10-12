@@ -2,8 +2,7 @@ import pickle
 import os
 from moviepy.editor import *
 import re
-
-put_phrase_in_video = True
+import config
 
 def url_to_id(url):
     """
@@ -24,6 +23,7 @@ def unpickle(path):
     return data
 
 def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, additional_time_before = 0, additional_time_after = 0, time_to_mute_after = 0):
+    config_dict = config.get_config()
     lexicon_entry = lexicon[strip_punctuation(format_string(text))]
     path = lexicon_entry["video_path"]
     start = lexicon_entry["start"]
@@ -63,8 +63,7 @@ def get_snippet_path(fade_in_time, fade_out_time, video_path, lexicon, text, add
             video.audio = audioclip
 
         # Add the phrase as text to the video
-
-        if put_phrase_in_video:
+        if config_dict["add_subtitles"]:
             txt_clip = TextClip(text, fontsize = 50, color = 'red')
             txt_clip = txt_clip.set_pos('bottom').set_duration(end - start)
             video = CompositeVideoClip([video, txt_clip])
