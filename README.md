@@ -10,12 +10,12 @@ Automatically create YouTube mashups. For a given list of videos and a text, Aut
 `In the mainstream it's always talked about Napoleon's invasion of America. However, the majority of people who have research this know that he actually managed to destroy the american colonies. There's a lot of potential here, and I've never really seen anyone doubt that.`
 
 ### How it works
-AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently, AutoMash is compatible to three speech-to-text tools: Vosk, [DeepSpeech](https://github.com/mozilla/DeepSpeech) and IBM Watson. After transcribing the videos, AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fit the words in the given text. In the end AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
+AutoMash will download the given YouTube videos and then use a speech-to-text tool to get a transcript of the video. Currently, AutoMash is compatible with three speech-to-text tools: [Vosk](https://alphacephei.com/vosk/), [DeepSpeech](https://github.com/mozilla/DeepSpeech) and [IBM Watson](https://www.ibm.com/watson). After transcribing the videos, AutoMash uses a greedy algorithm to find the longest sequence of words in the transcript that fits the words in the given text. Finally, AutoMash extracts the video sequences that corresponds to these sequences of words and cuts them together into the final video.
 
 ### DeepSpeech or IBM Watson
 TL;DR: Use Vosk. If this yields bad results try IBM Watson. I do not recommend DeepSpeech.
 
-You can either use Vosk, DeepSpeech or IBM Watson to get video transcripts. Vosk and DeepSpech are both easier to configure than IBM Watson and free to use without limitations. However for the models I tried (see below), Vosk produces both worse results and is slower than Vosk and IBM Watson. Transcribing one minute of video with DeepSpeech takes about a minute of real time on my Ryzen 5 1600. Hence, it is generally recommended to use Vosk over DeepSpech. IBM Watson seems to yield slightly better results than Vosk. The downsides to IBM Watson are that configuring it is a bit more work and that it can only be used to transcribe 500 minutes of audio per month.
+You can either use Vosk, DeepSpeech or IBM Watson to get video transcripts. Vosk and DeepSpech are both easier to configure than IBM Watson and free to use without limitations. However for the models I tried (see below), DeepSpeech produces both worse results and is slower than Vosk and IBM Watson. Transcribing one minute of video with DeepSpeech takes about a minute of real time on my Ryzen 5 1600. Hence, it is generally recommended to use Vosk over DeepSpech. IBM Watson seems to yield slightly better results than Vosk. The downsides to IBM Watson are that configuring it is a bit more work and that it can only be used to transcribe 500 minutes of audio per month.
 
 ## How to install
 ### Install the repository
@@ -24,13 +24,13 @@ Get the repository:
   * Go to directory ```cd AutoMash```
   * Create a folder for the virtual environment ```mkdir virtual_env```
   * Create virtual environment ```python3 -m venv virtual_env```
-  * Activate virtual environment: for Windows):
+  * Activate virtual environment:
      * For Windows: ```.\virtual_env\Scripts\activate.bat```
      * For Linux: ```source virtual_env/bin/activate```
 
   * If you want to have text subtitles in your videos (they can be activated in ```src\helpers.py```) then you need to install [ImageMagick](https://imagemagick.org/index.php) before installing the other dependencies
   * Install dependencies ```pip install -r requirements.txt```
-  * Next you either need to configure DeepSpeech or IBM Watson.
+  * Next you need to configure one of Vosk, DeepSpeech or IBM Watson.
 
 ### Configure Vosk
 Download the language model into the AutoMash folder ```curl -LO http://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip``` and unzip it. Then open the `config.yaml` file and set `transcription_tool` to `vosk` and `model_path` to the path of the unzipped folder, for example to `vosk-model-en-us-0.22`.
@@ -39,10 +39,10 @@ Download the language model into the AutoMash folder ```curl -LO http://alphacep
 Download the language model into the AutoMash folder ```curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm```. Then open the `config.yaml` file and set `transcription_tool` to `deepspeech` and `model_path` to the path of the model, for example to `deepspeech-0.9.3-models.pbmm`.
 
 ### Configure IBM Watson
-You will need a free account which will allow you to transform 500 minutes of audio into text for free.
+You will need a free account which will allow you to transform 500 minutes of audio into text per month for free.
 
 1. Register [here](https://cloud.ibm.com/registration). Sometimes account creation fails, this seems to be a faulty IBM anti fraud measure it helps to try different email addresses, private browsing / incognito mode mode or different browsers. For me it worked under Firefox with private browsing and a gmail address.
-2. Go to the tutorial [here](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-gettingStarted) and follow the pointrts under `IBM Cloud® only` to get the API key and URL.
+2. Go to the tutorial [here](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-gettingStarted) and follow the points under `IBM Cloud® only` to get the API key and URL.
 3. Create a file called `watson.key` that has the shape
 ```
 Url
@@ -53,12 +53,12 @@ API Key
 ## How to use AutoMash
 Before you can create the mashup you will need to decide on a list of YouTube videos that you want to use for this. Next we will get a transcript for these videos by querying IBM Watson, then we will write the text for the final video and create a video plan. Afterwards we can create the video and if necessary finetune the cuts.
 
-### Query IBM Watson
-Use ```python src\create_lexicon.py PROJECT_NAME YT_URL_1 YT_URL2 ... ``` to send the audios to IBM Watson and retrieve the transcripts. Here `PROJECT_NAME` is the name of your project which will be used to name newly created files, `YT_URL_1 YT_URL2 ... ` is a list of URLs of YouTube videos separated by spaces.
+### Transcribe the video
+Use ```python src\create_lexicon.py PROJECT_NAME YT_URL_1 YT_URL2 ... ``` to send the audios to your selected transcription tool and retrieve the transcripts. Here `PROJECT_NAME` is the name of your project which will be used to name newly created files, `YT_URL_1 YT_URL2 ... ` is a list of URLs of YouTube videos separated by spaces.
 
 ### Create a video plan
-The above step will have created a file called `PROJECT_NAME.txt` in the `AutoMash\tmp` directory. This text file is called the lexicon and contains all the video transcripts and is there to help you create the text for the mashup video. When writing your text ensure that you only use words that appear in the lexicon. The final video will sound better if you use longer sequences of words that appear exactly the same in the lexicon. You can also use punctuation (`,`, `.` and `;`) which will create small pauses between the speakers words.
-When you have decided on a text you can use ```python src\plan_video.py PROJECT_NAME "TEXT"``` to create the video plan. Here `TEXT` is the text you just came up with, note that it needs to be wrapped in `"`s.
+The above step will have created a file called `PROJECT_NAME.txt` in the `AutoMash\tmp` directory. This text file is called the lexicon and contains all the video transcripts and is there to help you create the text for the mashup video. When writing your text ensure that you only use words that appear in the lexicon. The final video will sound better if you use longer sequences from the lexicon. You can also use punctuation (`,`, `.` and `;`) which signifies where pauses should be inserted, `,` gives a short pause, `.` a long pause and `;` a medium length pause (the length of pauses can be configured in `config.yaml`).
+When you have decided on a text you can use ```python src\plan_video.py PROJECT_NAME "TEXT"``` to create the video plan. Here `TEXT` is the text you just came up with, note that it needs to be wrapped in `"`. For example if your text is `Hello, this is a text` then you can create the video plan with ```python src\plan_video.py PROJECT_NAME "Hello, this is a text"```.
 
 
 ### Create the video
