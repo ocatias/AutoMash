@@ -28,7 +28,7 @@ Get the repository:
      * For Windows: ```.\virtual_env\Scripts\activate.bat```
      * For Linux: ```source virtual_env/bin/activate```
 
-  * If you want to have text subtitles in your videos (they can be activated in ```src\helpers.py```) then you need to install [ImageMagick](https://imagemagick.org/index.php) before installing the other dependencies
+  * If you want to have text subtitles in your videos then set `add_subtitles` in `config.yaml` to `1`. Then install [ImageMagick](https://imagemagick.org/index.php) before installing the other dependencies. If you do not want text subtitles then set `add_subtitles` to `0`.
   * Install dependencies ```pip install -r requirements.txt```
   * Next you need to configure one of Vosk, DeepSpeech or IBM Watson.
 
